@@ -37,6 +37,7 @@ export class ParticleEngine {
     }
 
     addBehavior(b: Behavior) {
+        b.registerParticles(this.particles);
         this.behaviors.push(b);
     }
 
@@ -62,9 +63,7 @@ export class ParticleEngine {
 
         if(this.behaviors.length > 0) {
             for(var i = 0; i < this.behaviors.length; ++i) {
-                for(var j = 0; j < this.particles.length; ++j) {
-                    this.behaviors[i].apply(this.particles[j]);
-                }
+                this.behaviors[i].update();
             }
         }
 

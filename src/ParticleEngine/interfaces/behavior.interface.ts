@@ -2,5 +2,7 @@
 import { Particle } from '../classes';
 
 export interface Behavior {
-    apply(p: Particle);
+    particle_refs: Particle[];
+    registerParticles(particles: Particle[]);
+    update();
 }
