@@ -2,7 +2,8 @@ import { Component, NgZone, AfterViewInit, ViewChild, ElementRef, HostListener }
 
 import * as PIXI from 'pixi.js';
 
-import { ParticleEngine, Vector2, Particle, EdgeBehavior } from '../ParticleEngine';
+import { ParticleEngine, Vector2, Particle, EdgeBehavior, Collision } from '../ParticleEngine';
+import { hslToRgb } from '../ParticleEngine/utils/utils';
 
 @Component({
   selector: 'app-root',
@@ -46,7 +47,7 @@ export class AppComponent {
     var pmouseX = 0;
     var pmouseY = 0;
 
-    var number_of_particles = this.app.renderer instanceof PIXI.WebGLRenderer ? 500 : 100;
+    var number_of_particles = this.app.renderer instanceof PIXI.WebGLRenderer ? 20 : 100;
     var particlesContainer = new PIXI.particles.ParticleContainer(number_of_particles, {
       scale: true,
       position: true,
@@ -62,7 +63,9 @@ export class AppComponent {
     _particles.addForce(wind);
 
     var wallBounce = new EdgeBehavior();
+    var collision = new Collision();
     _particles.addBehavior(wallBounce);
+    _particles.addBehavior(collision);
 
     particlesContainer.on('mousemove', (event) => {
       pmouseX = mouseX;
@@ -76,7 +79,7 @@ export class AppComponent {
     container.addChild(particlesContainer);
 
     var graphics = new PIXI.Graphics();
-    graphics.beginFill(0xffffff);
+    graphics.beginFill(0x5588aa);
     graphics.drawCircle(0, 0, 10, 10);
     graphics.endFill();
 
@@ -89,6 +92,11 @@ export class AppComponent {
       var sprite = new PIXI.Sprite(texture);
       sprite.x = x;
       sprite.y = y;
+
+      var rgb = hslToRgb(x % 360, 0.44, 0.56);
+      console.log(rgb);
+      // sprite.tint = rgb[0] << 16 | rgb[1] << 8 | rgb[0];
+      sprite.tint = Math.random() * 0xFFFFFF;
 
       particlesContainer.addChild(sprite);
 

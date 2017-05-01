@@ -260,4 +260,8 @@ export class Vector2 {
         this.xMag /= s;
         this.yMag /= s;
     }
+
+    euclidianNorm() {
+        return Math.sqrt(this.xMag * this.xMag + this.yMag * this.yMag);
+    }
 }
