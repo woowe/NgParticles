@@ -1,5 +1,5 @@
 
-import { Particle, Vector2 } from './index';
+import { Particle, Vector2 } from '../classes';
 import { Behavior } from '../interfaces';
 
 export class EdgeBehavior implements Behavior {
@@ -8,25 +8,27 @@ export class EdgeBehavior implements Behavior {
     constructor() {}
 
     wall(p: Particle) {
-        if(p.x - 10 < 0) {
-            p.x = 0 + 10;
+        if(p.x < 0) {
+            p.x = 0;
             p.velocity.xMag *= -0.8;
         }
 
-        if(p.x + 10 > window.innerWidth) {
-            p.x = window.innerWidth - 10;
+        if(p.x + 20 > window.innerWidth) {
+            p.x = window.innerWidth - 20;
             p.velocity.xMag *= -0.8;
         }
 
-        if(p.y - 10 < 0) {
-            p.y = 0 + 10;
+        if(p.y < 0) {
+            p.y = 0;
             p.velocity.yMag *= -0.8;
         }
 
-        if(p.y + 10 > window.innerHeight) {
-            p.y = window.innerHeight - 10;
+        if(p.y + 20 > window.innerHeight) {
+            p.y = window.innerHeight - 20;
             p.velocity.yMag *= -0.8;
         }
+
+        p.updatePos();
     }
 
     registerParticles(particles: Particle[]) {

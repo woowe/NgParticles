@@ -5,8 +5,13 @@ export class Particle {
     x: number;
     y: number;
     saveTo: {x: number, y: number};
+    sprite: any;
+    scale: number;
 
     velocity: Vector2;
+    pos: Vector2;
+    cx: number;
+    cy: number;
 
     /**
      * Creates an instance of Particle.
@@ -19,7 +24,8 @@ export class Particle {
         this.x = x;
         this.y = y;
 
-        this.velocity = new Vector2(Math.random() * 10, Math.random() * 10);
+        this.velocity = new Vector2(Math.floor(Math.random() * 12) - 6, Math.floor(Math.random() * 12) - 6);
+        this.pos = new Vector2(this.x, this.y);
     }
 
     /**
@@ -40,8 +46,14 @@ export class Particle {
      * @memberOf Particle
      */
     update() {
+        this.pos.add(this.velocity);
         this.x += this.velocity.xMag;
         this.y += this.velocity.yMag;
+    }
+
+    updatePos() {
+        this.pos.xMag = this.x;
+        this.pos.yMag = this.y;
     }
 
     /**
@@ -51,7 +63,18 @@ export class Particle {
      * @memberOf Particle
      */
     save() {
+        if(!this.cx) {
+            this.cx = this.sprite.width / 2;
+        }
+
+        if(!this.cy) {
+            this.cy = this.sprite.height / 2;
+        }
         this.saveTo.x = this.x;
         this.saveTo.y = this.y;
+        this.sprite.pivot.x = this.x + this.cx;
+        this.sprite.pivot.y = this.y + this.cy;
+        // this.sprite.rotation = -Math.PI / 2;
+        this.sprite.rotation = this.velocity.heading() + Math.PI / 2;
     }
 }

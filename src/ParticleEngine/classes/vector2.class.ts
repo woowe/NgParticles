@@ -261,7 +261,84 @@ export class Vector2 {
         this.yMag /= s;
     }
 
-    euclidianNorm() {
+    /**
+     * Returns the euclidian norm of the vector
+     * sqrt(x * x + y * y)
+     * 
+     * @returns {Number} 
+     * 
+     * @memberOf Vector2
+     */
+    euclidianNorm(): number {
         return Math.sqrt(this.xMag * this.xMag + this.yMag * this.yMag);
+    }
+
+    /**
+     * Returns the magnitude of the vector
+     * 
+     * @returns {number} 
+     * 
+     * @memberof Vector2
+     */
+    magnitude(): number {
+        return this.euclidianNorm();
+    }
+
+    /**
+     * Returns a unit vector that is in the same direction as this one
+     * 
+     * @returns {Vector2} 
+     * 
+     * @memberof Vector2
+     */
+    normalize(): Vector2 {
+        return this.scalarDiv(this.magnitude());
+    }
+
+    /**
+     * Mutates the current vector to a unit vector in the same direction
+     * 
+     * 
+     * @memberof Vector2
+     */
+    mutNormalize(): void {
+        this.mutScalarDiv(this.magnitude());
+    }
+
+    /**
+     * Returns the distance between to vectors
+     * 
+     * @param {Vector2} v 
+     * @returns {number} 
+     * 
+     * @memberof Vector2
+     */
+    dist(v: Vector2): number {
+        return Math.sqrt((this.xMag - v.xMag) * (this.xMag - v.xMag) + (this.yMag - v.yMag) * (this.yMag - v.yMag));
+    }
+
+    /**
+     * Returns the angle the vector is heading (in radians)
+     * 
+     * @returns {number} 
+     * 
+     * @memberof Vector2
+     */
+    heading(): number {
+        return Math.atan2(this.yMag, this.xMag);
+    }
+
+    /**
+     * Returns a new vector identical to this one
+     * 
+     * @returns {Vector2} 
+     * 
+     * @memberOf Vector2
+     */
+    clone(): Vector2 {
+        return new Vector2(
+            this.xMag,
+            this.yMag
+        );
     }
 }
