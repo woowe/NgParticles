@@ -126,7 +126,7 @@ export class AppComponent {
 
     loader.load((loader, resources) => {
       img_tex = new PIXI.Texture.fromVideo(resources.five.data);
-      // img_tex = new PIXI.Texture.from(resources.michael.texture);
+      img_tex = new PIXI.Texture.from(resources.michael.texture);
       // img_tex = new PIXI.Texture.from(resources.zack.texture);
       mask_tex = new PIXI.Texture.from(resources.mask.texture);
 
@@ -196,7 +196,7 @@ export class AppComponent {
 
         // particlesContainer.mask = mask_tex;
 
-        let particle = new Particle(tx, ty);
+        let particle = new Particle(tx + sprite.width / 2, ty + sprite.height / 2);
         // let particle = new Particle(x, y);
         particle.saveTo = sprite.position;
         particle.sprite = sprite;

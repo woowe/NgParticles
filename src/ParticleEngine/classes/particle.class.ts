@@ -72,7 +72,7 @@ export class Particle {
             this.cy = this.sprite.height / 2;
         }
 
-        this.cx = this.cy = 0;
+        // this.cx = this.cy = 0;
         this.saveTo.x = this.x - this.cx;
         this.saveTo.y = this.y - this.cy;
 
