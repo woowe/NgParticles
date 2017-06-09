@@ -48,7 +48,7 @@ export class AppComponent {
     var pmouseX = 0;
     var pmouseY = 0;
 
-    var number_of_particles = this.app.renderer instanceof PIXI.WebGLRenderer ? 250 : 100;
+    var number_of_particles = this.app.renderer instanceof PIXI.WebGLRenderer ? 550 : 100;
     var particlesContainer = new PIXI.particles.ParticleContainer(number_of_particles, {
       scale: true,
       position: true,
@@ -96,19 +96,20 @@ export class AppComponent {
 
     container.addChild(particlesContainer);
     container.addChild(p_container);
-    var scale = 55;
+    var scale = 105;
     var graphics = new PIXI.Graphics();
 
     // graphics.lineStyle(1, 0xffffff, 1);
-    // graphics.moveTo(2.5 * scale, 0);
-    // graphics.lineTo(5 * scale, 8 * scale);
-    // graphics.lineTo(0, 8 * scale);
-    // graphics.lineTo(2.5 * scale, 0);
-    // graphics.closePath();
     graphics.beginFill(0xffffff);
+    graphics.moveTo(0, 0);
+    graphics.lineTo(2*scale, scale);
+    graphics.lineTo(scale, 2*scale);
+    // graphics.lineTo(2.5 * scale, 0);
+    graphics.closePath();
+    // graphics.beginFill(0xffffff);
     // graphics.drawRect(2 * scale * -1, 2 * scale * -1, 4 * scale, 4 * scale);
     // graphics.beginFill(0xffffff);
-    graphics.drawCircle(0, 0, scale);
+    // graphics.drawCircle(0, 0, scale);
     graphics.endFill();
 
     let texture = this.app.renderer.generateTexture(graphics, PIXI.settings.SCALE_MODE, 16/9);

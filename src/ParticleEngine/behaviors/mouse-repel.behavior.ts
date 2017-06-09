@@ -38,10 +38,10 @@ export class MouseRepelBehavior implements Behavior {
           // var a = Math.atan2(ipos.y - this.mouse_pos.y, ipos.x - this.mouse_pos.x);
           // var tx = ipos.x;
           // var ty = ipos.y;
-          var tx = (this.mouse_pos.x - ipos.x) * 1/md * 1/md * 1/md/*(Math.cos(a) * d)*/;
-          var ty = (this.mouse_pos.y - ipos.y) * 1/md * 1/md * 1/md/*(Math.sin(a) * d)*/;
+          var tx = (this.mouse_pos.x - ipos.x) * 1/md * 1/md * 1/md * 1/md/*(Math.cos(a) * d)*/;
+          var ty = (this.mouse_pos.y - ipos.y) * 1/md * 1/md * 1/md * 1/md/*(Math.sin(a) * d)*/;
 
-          let repel_force = new Vector2(tx, ty).scalarMult(-60000);
+          let repel_force = new Vector2(tx, ty).scalarMult(-70000);
 
           repel_force.limit(5);
 
