@@ -2,7 +2,7 @@ import { Component, NgZone, AfterViewInit, ViewChild, ElementRef, HostListener }
 
 import * as PIXI from 'pixi.js';
 
-import { ParticleEngine, Vector2, Particle, EdgeBehavior, BorderWrapBehavior, Collision } from '../ParticleEngine';
+import { ParticleEngine, Vector2, Particle, EdgeBehavior, BorderWrapBehavior, MouseRepelBehavior, Collision } from '../ParticleEngine';
 import { Boid } from '../Boids';
 import { hslToRgb } from '../ParticleEngine/utils/utils';
 
@@ -48,7 +48,7 @@ export class AppComponent {
     var pmouseX = 0;
     var pmouseY = 0;
 
-    var number_of_particles = this.app.renderer instanceof PIXI.WebGLRenderer ? 5000 : 100;
+    var number_of_particles = this.app.renderer instanceof PIXI.WebGLRenderer ? 250 : 100;
     var particlesContainer = new PIXI.particles.ParticleContainer(number_of_particles, {
       scale: true,
       position: true,
@@ -57,20 +57,26 @@ export class AppComponent {
       alpha: true
     });
 
+    let p_container = new PIXI.Container();
+
     let _particles = new ParticleEngine();
     let gravity = new Vector2(0, 9.8);
-    let wind = new Vector2(0, 0);
+    // let wind = new Vector2(0.6, -0.4);
     var tendTo = new Vector2(window.innerWidth / 2, window.innerHeight / 2);
     // _particles.addForce(gravity);
     // _particles.addForce(wind);
+
+    let mouse_pos = {x: 0, y: 0};
 
     var edgeBehavior = new EdgeBehavior();
     // var collision = new Collision();
     var borderWrap = new BorderWrapBehavior();
     var boid = new Boid(tendTo);
+    var mouse_repel = new MouseRepelBehavior(mouse_pos);
     // _particles.addBehavior(boid);
-    // _particles.addBehavior(borderWrap);
-    _particles.addBehavior(edgeBehavior);
+    _particles.addBehavior(borderWrap);
+    _particles.addBehavior(mouse_repel);
+    // _particles.addBehavior(edgeBehavior);
 
     particlesContainer.interactive = true;
     particlesContainer.on('mousemove', (event) => {
@@ -80,46 +86,66 @@ export class AppComponent {
       mouseY = event.data.global.y;
       tendTo.xMag = mouseX;
       tendTo.yMag = mouseY;
+      mouse_pos.x = mouseX;
+      mouse_pos.y = mouseY;
       // tendTo.updatePos(mouseX, mouseY);
-      // console.log('MOUSE MOVE', tendTo.pos);
+      // console.log('MOUSE MOVE', mouse_pos);
     });
 
     container.filterArea = new PIXI.Rectangle(0, 0, this.app.renderer.width, this.app.renderer.height);
-    
+
     container.addChild(particlesContainer);
-    var scale = 10;
+    container.addChild(p_container);
+    var scale = 55;
     var graphics = new PIXI.Graphics();
-    
+
     // graphics.lineStyle(1, 0xffffff, 1);
     // graphics.moveTo(2.5 * scale, 0);
     // graphics.lineTo(5 * scale, 8 * scale);
     // graphics.lineTo(0, 8 * scale);
     // graphics.lineTo(2.5 * scale, 0);
     // graphics.closePath();
-    graphics.beginFill(0x8bc5ff);
-    graphics.drawRect(2 * scale * -1, 2 * scale * -1, 4 * scale, 4 * scale);
+    graphics.beginFill(0xffffff);
+    // graphics.drawRect(2 * scale * -1, 2 * scale * -1, 4 * scale, 4 * scale);
     // graphics.beginFill(0xffffff);
-    // graphics.drawCircle(0, 0, 2 * scale);
+    graphics.drawCircle(0, 0, scale);
     graphics.endFill();
 
     let texture = this.app.renderer.generateTexture(graphics, PIXI.settings.SCALE_MODE, 16/9);
 
     let mask_tex;
-    let michael_tex;
+    let img_tex;
+    let vid_tex;
 
     let loader = new PIXI.loaders.Loader();
+    PIXI.loaders.Resource.setExtensionLoadType('mp4', PIXI.loaders.Resource.LOAD_TYPE.VIDEO);
+    loader.add('five', '../assets/5.mp4');
     loader.add('michael', '../assets/michael.jpg');
+    loader.add('zack', '../assets/zack.jpg');
     loader.add('mask', '../assets/mask.png');
 
     loader.load((loader, resources) => {
-      michael_tex = new PIXI.Texture.from(resources.michael.texture);
+      img_tex = new PIXI.Texture.fromVideo(resources.five.data);
+      // img_tex = new PIXI.Texture.from(resources.michael.texture);
+      // img_tex = new PIXI.Texture.from(resources.zack.texture);
       mask_tex = new PIXI.Texture.from(resources.mask.texture);
-    });
-    
-    loader.onComplete.add(() => {
-      // let michael_tex = PIXI.TextureCache('../assets/michael.jpg');
 
-      console.log("LOADED", michael_tex);
+      let img_sprite = new PIXI.Sprite(img_tex);
+      img_sprite.x = this.app.renderer.width / 2 - img_tex.width / 2;
+      img_sprite.y = this.app.renderer.height / 2 - img_tex.height / 2;
+
+      // let vid_sprite = new PIXI.Sprite(vid_tex);
+      // vid_sprite.x = this.app.renderer.width / 2 - vid_tex.width / 2;
+      // vid_sprite.y = this.app.renderer.height / 2 - vid_tex.height / 2;
+      p_container.addChild(img_sprite);
+    });
+
+    loader.onComplete.add(() => {
+      // let img_tex = PIXI.TextureCache('../assets/michael.jpg');
+
+      console.log("LOADED", img_tex);
+
+      // let m = new PIXI.Sprite.fromImage('../assets/mask.png');
 
       for(var i = 0; i < number_of_particles; ++i) {
         var rx = Math.random();
@@ -127,10 +153,10 @@ export class AppComponent {
         var x = rx * this.app.renderer.width;
         var y = ry * this.app.renderer.height;
 
-        var c_x = rx * michael_tex.width;
-        var c_y = ry * michael_tex.height;
-        var c_w = michael_tex.width - c_x;
-        var c_h = michael_tex.height - c_y;
+        var c_x = rx * (img_tex.width - 2*scale);
+        var c_y = ry * (img_tex.height - 2*scale);
+        var c_w = img_tex.width - c_x;
+        var c_h = img_tex.height - c_y;
 
         if(c_w <= 0 || c_h <= 0) {
           continue;
@@ -139,25 +165,39 @@ export class AppComponent {
         c_w = c_w > 2*scale ? 2*scale : c_w;
         c_h = c_h > 2*scale ? 2*scale : c_h;
 
-        console.log("RECT ",c_x, c_y, c_w, c_h);
+        // console.log("RECT ",c_x, c_y, c_w, c_h);
 
         let frame = new PIXI.Rectangle(c_x, c_y, c_w , c_h);
-        let src_tex = new PIXI.Texture(michael_tex, frame);
-        
+        let src_tex = new PIXI.Texture(img_tex, frame);
+        // let gen_tex = this.gen_text_with_mask(src_tex, graphics);
+
+        // let gen_tex = this.app.renderer.generateTexture(src_tex, PIXI.settings.SCALE_MODE, 16/9);
+
+        let tx = c_x + this.app.renderer.width / 2 - img_tex.width / 2;
+        let ty = c_y + this.app.renderer.height / 2 - img_tex.height / 2;
+
         var sprite = new PIXI.Sprite(src_tex);
-        sprite.x = x;
-        sprite.y = y;
+        var g = new PIXI.Sprite(texture);
+        // g.position = sprite.position;
+        sprite.x = tx;
+        // sprite.x = x;
+        sprite.y = ty;
+        g.x = tx;
+        g.y = ty;
+        // sprite.y = y;
 
         // var rgb = hslToRgb(x % 360, 0.44, 0.56);
         // sprite.tint = rgb[0] << 16 | rgb[1] << 8 | rgb[0];
         // sprite.tint = Math.random() * 0xFFFFFF;
-        sprite.mask = mask_tex;
+        sprite.mask = g;
 
-        particlesContainer.addChild(sprite);
+        p_container.addChild(sprite);
+        p_container.addChild(g);
 
-        particlesContainer.mask = mask_tex;
+        // particlesContainer.mask = mask_tex;
 
-        let particle = new Particle(x, y);
+        let particle = new Particle(tx, ty);
+        // let particle = new Particle(x, y);
         particle.saveTo = sprite.position;
         particle.sprite = sprite;
         // particle.scale = scale;
@@ -165,9 +205,16 @@ export class AppComponent {
         _particles.addParticle(particle);
       }
 
-      this.app.ticker.add((delta) => {
-        _particles.update(delta/50);
-      });
+      let cnt = 0;
+
+      // setTimeout(() => {
+        this.app.ticker.add((delta) => {
+          // if(cnt > 200) {
+            _particles.update(delta/50);
+          // }
+          cnt += delta;
+        });
+      // }, 2500);
     });
   }
 
@@ -175,5 +222,23 @@ export class AppComponent {
   webgl_scene_resize() {
     let {w_height, w_width} = {w_height: window.innerHeight, w_width: window.innerWidth};
     this.app.renderer.resize(w_width, w_height);
+  }
+
+  gen_text_with_mask(tex, mask) {
+    let tempStage = new PIXI.Container();
+    let s = new PIXI.Sprite(tex);
+    // let m = new PIXI.Sprite.fromImage('../assets/mask.png');
+    // s.x = 0;
+    // s.y = 0;
+    // m.x = 0;
+    // m.y = 0;
+    // m.width = s.width;
+    // m.height = s.height;
+    s.mask = mask;
+    // tempStage.width = s.width;
+    // tempStage.height = s.height;
+    // tempStage.addChild(s);
+    tempStage.addChild(mask);
+    return this.app.renderer.generateTexture(tempStage, PIXI.settings.SCALE_MODE, 16/9);
   }
 }

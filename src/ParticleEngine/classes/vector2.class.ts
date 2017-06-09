@@ -1,7 +1,7 @@
 
 /**
  * Class that represents a 2D vector
- * 
+ *
  * @export
  * @class Vector2
  */
@@ -11,9 +11,9 @@ export class Vector2 {
 
     /**
      * Creates an instance of Vector2.
-     * @param {number} [xMag=0] 
-     * @param {number} [yMag=0] 
-     * 
+     * @param {number} [xMag=0]
+     * @param {number} [yMag=0]
+     *
      * @memberOf Vector2
      */
     constructor(xMag: number = 0, yMag: number = 0) {
@@ -29,10 +29,10 @@ export class Vector2 {
 
     /**
      * Add this vector with another
-     * 
-     * @param {Vector2} v 
-     * @returns {Vector2} 
-     * 
+     *
+     * @param {Vector2} v
+     * @returns {Vector2}
+     *
      * @memberOf Vector2
      */
     add(v: Vector2): Vector2 {
@@ -44,9 +44,9 @@ export class Vector2 {
 
     /**
      * Add this vector with another
-     * 
-     * @param {Vector2} v 
-     * 
+     *
+     * @param {Vector2} v
+     *
      * @memberOf Vector2
      */
     mutAdd(v: Vector2): void {
@@ -56,10 +56,10 @@ export class Vector2 {
 
     /**
      * Add this vector with a scalar value
-     * 
-     * @param {number} s 
-     * @returns {Vector2} 
-     * 
+     *
+     * @param {number} s
+     * @returns {Vector2}
+     *
      * @memberOf Vector2
      */
     scalarAdd(s: number): Vector2 {
@@ -71,9 +71,9 @@ export class Vector2 {
 
     /**
      * Add this vector with a scalar value
-     * 
-     * @param {number} s 
-     * 
+     *
+     * @param {number} s
+     *
      * @memberOf Vector2
      */
     mutScalarAdd(s: number): void {
@@ -89,10 +89,10 @@ export class Vector2 {
 
     /**
      * Subtract this vector with another
-     * 
-     * @param {Vector2} v 
-     * @returns {Vector2} 
-     * 
+     *
+     * @param {Vector2} v
+     * @returns {Vector2}
+     *
      * @memberOf Vector2
      */
     sub(v: Vector2): Vector2 {
@@ -104,9 +104,9 @@ export class Vector2 {
 
     /**
      * Subtract this vector with another
-     * 
-     * @param {Vector2} v 
-     * 
+     *
+     * @param {Vector2} v
+     *
      * @memberOf Vector2
      */
     mutSub(v: Vector2): void {
@@ -116,10 +116,10 @@ export class Vector2 {
 
     /**
      * Subtract this vector with a scalar
-     * 
-     * @param {number} s 
-     * @returns {Vector2} 
-     * 
+     *
+     * @param {number} s
+     * @returns {Vector2}
+     *
      * @memberOf Vector2
      */
     scalarSub(s: number): Vector2 {
@@ -131,9 +131,9 @@ export class Vector2 {
 
     /**
      * Subtract this vector with a scalar
-     * 
-     * @param {number} s 
-     * 
+     *
+     * @param {number} s
+     *
      * @memberOf Vector2
      */
     mutScalarSub(s: number): void {
@@ -149,10 +149,10 @@ export class Vector2 {
 
     /**
      * Mulitply this vector with another
-     * 
-     * @param {Vector2} v 
-     * @returns {Vector2} 
-     * 
+     *
+     * @param {Vector2} v
+     * @returns {Vector2}
+     *
      * @memberOf Vector2
      */
     mult(v: Vector2): Vector2 {
@@ -164,9 +164,9 @@ export class Vector2 {
 
     /**
      * Mulitply this vector with another
-     * 
-     * @param {Vector2} v 
-     * 
+     *
+     * @param {Vector2} v
+     *
      * @memberOf Vector2
      */
     mutMult(v: Vector2): void {
@@ -176,10 +176,10 @@ export class Vector2 {
 
     /**
      * Mulitply this vector by a scalar
-     * 
-     * @param {number} s 
-     * @returns {Vector2} 
-     * 
+     *
+     * @param {number} s
+     * @returns {Vector2}
+     *
      * @memberOf Vector2
      */
     scalarMult(s: number): Vector2 {
@@ -191,9 +191,9 @@ export class Vector2 {
 
     /**
      * Mulitply this vector by a scalar
-     * 
-     * @param {number} s 
-     * 
+     *
+     * @param {number} s
+     *
      * @memberOf Vector2
      */
     mutScalarMult(s: number): void {
@@ -209,10 +209,10 @@ export class Vector2 {
 
     /**
      * Divide this vector by another
-     * 
-     * @param {Vector2} v 
-     * @returns {Vector2} 
-     * 
+     *
+     * @param {Vector2} v
+     * @returns {Vector2}
+     *
      * @memberOf Vector2
      */
     div(v: Vector2): Vector2 {
@@ -224,9 +224,9 @@ export class Vector2 {
 
     /**
      * Divide this vector by another
-     * 
-     * @param {Vector2} v 
-     * 
+     *
+     * @param {Vector2} v
+     *
      * @memberOf Vector2
      */
     mutDiv(v: Vector2): void {
@@ -236,10 +236,10 @@ export class Vector2 {
 
     /**
      * Divide this vector by a scalar
-     * 
-     * @param {number} s 
-     * @returns {Vector2} 
-     * 
+     *
+     * @param {number} s
+     * @returns {Vector2}
+     *
      * @memberOf Vector2
      */
     scalarDiv(s: number): Vector2 {
@@ -251,9 +251,9 @@ export class Vector2 {
 
     /**
      * Divide this vector by a scalar
-     * 
-     * @param {number} s 
-     * 
+     *
+     * @param {number} s
+     *
      * @memberOf Vector2
      */
     mutScalarDiv(s: number): void {
@@ -264,9 +264,9 @@ export class Vector2 {
     /**
      * Returns the euclidian norm of the vector
      * sqrt(x * x + y * y)
-     * 
-     * @returns {Number} 
-     * 
+     *
+     * @returns {Number}
+     *
      * @memberOf Vector2
      */
     euclidianNorm(): number {
@@ -275,9 +275,9 @@ export class Vector2 {
 
     /**
      * Returns the magnitude of the vector
-     * 
-     * @returns {number} 
-     * 
+     *
+     * @returns {number}
+     *
      * @memberof Vector2
      */
     magnitude(): number {
@@ -286,9 +286,9 @@ export class Vector2 {
 
     /**
      * Returns a unit vector that is in the same direction as this one
-     * 
-     * @returns {Vector2} 
-     * 
+     *
+     * @returns {Vector2}
+     *
      * @memberof Vector2
      */
     normalize(): Vector2 {
@@ -297,8 +297,8 @@ export class Vector2 {
 
     /**
      * Mutates the current vector to a unit vector in the same direction
-     * 
-     * 
+     *
+     *
      * @memberof Vector2
      */
     mutNormalize(): void {
@@ -307,10 +307,10 @@ export class Vector2 {
 
     /**
      * Returns the distance between to vectors
-     * 
-     * @param {Vector2} v 
-     * @returns {number} 
-     * 
+     *
+     * @param {Vector2} v
+     * @returns {number}
+     *
      * @memberof Vector2
      */
     dist(v: Vector2): number {
@@ -319,20 +319,29 @@ export class Vector2 {
 
     /**
      * Returns the angle the vector is heading (in radians)
-     * 
-     * @returns {number} 
-     * 
+     *
+     * @returns {number}
+     *
      * @memberof Vector2
      */
     heading(): number {
         return Math.atan2(this.yMag, this.xMag);
     }
 
+    limit(mag_lim: number) {
+      var mag = this.magnitude();
+
+      if(mag > mag_lim) {
+          this.mutScalarDiv(mag);
+          this.mutScalarMult(mag_lim);
+      }
+    }
+
     /**
      * Returns a new vector identical to this one
-     * 
-     * @returns {Vector2} 
-     * 
+     *
+     * @returns {Vector2}
+     *
      * @memberOf Vector2
      */
     clone(): Vector2 {

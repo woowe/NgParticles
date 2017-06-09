@@ -10,14 +10,14 @@ export class Particle {
 
     velocity: Vector2;
     pos: Vector2;
-    cx: number;
-    cy: number;
+    cx: number = 0;
+    cy: number = 0;
 
     /**
      * Creates an instance of Particle.
-     * @param {number} [x=0] 
-     * @param {number} [y=0] 
-     * 
+     * @param {number} [x=0]
+     * @param {number} [y=0]
+     *
      * @memberOf Particle
      */
     constructor(x: number = 0, y: number = 0) {
@@ -31,9 +31,9 @@ export class Particle {
 
     /**
      * Add a vector to the particle's velocity vector
-     * 
-     * @param {Vector2} v 
-     * 
+     *
+     * @param {Vector2} v
+     *
      * @memberOf Particle
      */
     addForce(v: Vector2) {
@@ -42,8 +42,8 @@ export class Particle {
 
     /**
      * Updates the position of the particle
-     * 
-     * 
+     *
+     *
      * @memberOf Particle
      */
     update() {
@@ -59,8 +59,8 @@ export class Particle {
 
     /**
      * Saves the particle's position to the saveTo object
-     * 
-     * 
+     *
+     *
      * @memberOf Particle
      */
     save() {
@@ -71,8 +71,15 @@ export class Particle {
         if(!this.cy) {
             this.cy = this.sprite.height / 2;
         }
-        this.saveTo.x = this.x;
-        this.saveTo.y = this.y;
+
+        this.cx = this.cy = 0;
+        this.saveTo.x = this.x - this.cx;
+        this.saveTo.y = this.y - this.cy;
+
+        if(this.sprite.mask) {
+          this.sprite.mask.x = this.x - this.cx;
+          this.sprite.mask.y = this.y - this.cy;
+        }
         // this.sprite.pivot.x = this.x + this.cx;
         // this.sprite.pivot.y = this.y + this.cy;
         // this.sprite.rotation = -Math.PI / 2;
