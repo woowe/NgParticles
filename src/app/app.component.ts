@@ -48,7 +48,7 @@ export class AppComponent {
     var pmouseX = 0;
     var pmouseY = 0;
 
-    var number_of_particles = this.app.renderer instanceof PIXI.WebGLRenderer ? 1000 : 100;
+    var number_of_particles = this.app.renderer instanceof PIXI.WebGLRenderer ? 5000 : 100;
     var particlesContainer = new PIXI.particles.ParticleContainer(number_of_particles, {
       scale: true,
       position: true,
@@ -68,8 +68,9 @@ export class AppComponent {
     // var collision = new Collision();
     var borderWrap = new BorderWrapBehavior();
     var boid = new Boid(tendTo);
-    _particles.addBehavior(boid);
-    _particles.addBehavior(borderWrap);
+    // _particles.addBehavior(boid);
+    // _particles.addBehavior(borderWrap);
+    _particles.addBehavior(edgeBehavior);
 
     particlesContainer.interactive = true;
     particlesContainer.on('mousemove', (event) => {
@@ -86,47 +87,88 @@ export class AppComponent {
     container.filterArea = new PIXI.Rectangle(0, 0, this.app.renderer.width, this.app.renderer.height);
     
     container.addChild(particlesContainer);
-    var scale = 2;
+    var scale = 10;
     var graphics = new PIXI.Graphics();
-    // graphics.beginFill(0x5588aa);
-    graphics.lineStyle(1, 0xffffff, 1);
-    graphics.moveTo(2.5 * scale, 0);
-    graphics.lineTo(5 * scale, 8 * scale);
-    graphics.lineTo(0, 8 * scale);
-    graphics.lineTo(2.5 * scale, 0);
-    graphics.closePath();
-    // graphics.drawCircle(2.5 * scale, 4.1225 * scale, 2 * scale);
-    // graphics.endFill();
+    
+    // graphics.lineStyle(1, 0xffffff, 1);
+    // graphics.moveTo(2.5 * scale, 0);
+    // graphics.lineTo(5 * scale, 8 * scale);
+    // graphics.lineTo(0, 8 * scale);
+    // graphics.lineTo(2.5 * scale, 0);
+    // graphics.closePath();
+    graphics.beginFill(0x8bc5ff);
+    graphics.drawRect(2 * scale * -1, 2 * scale * -1, 4 * scale, 4 * scale);
+    // graphics.beginFill(0xffffff);
+    // graphics.drawCircle(0, 0, 2 * scale);
+    graphics.endFill();
 
     let texture = this.app.renderer.generateTexture(graphics, PIXI.settings.SCALE_MODE, 16/9);
 
-    for(var i = 0; i < number_of_particles; ++i) {
-      var x = Math.random() * this.app.renderer.width;
-      var y = Math.random() * this.app.renderer.height;
+    let mask_tex;
+    let michael_tex;
 
-      var sprite = new PIXI.Sprite(texture);
-      sprite.x = x;
-      sprite.y = y;
+    let loader = new PIXI.loaders.Loader();
+    loader.add('michael', '../assets/michael.jpg');
+    loader.add('mask', '../assets/mask.png');
 
-      var rgb = hslToRgb(x % 360, 0.44, 0.56);
-      // sprite.tint = rgb[0] << 16 | rgb[1] << 8 | rgb[0];
-      sprite.tint = Math.random() * 0xFFFFFF;
-
-      particlesContainer.addChild(sprite);
-
-      let particle = new Particle(x, y);
-      particle.saveTo = sprite.position;
-      particle.sprite = sprite;
-      particle.scale = scale;
-
-      _particles.addParticle(particle);
-    }
-
-    this.app.ticker.add((delta) => {
-      _particles.update(delta/50);
+    loader.load((loader, resources) => {
+      michael_tex = new PIXI.Texture.from(resources.michael.texture);
+      mask_tex = new PIXI.Texture.from(resources.mask.texture);
     });
-
     
+    loader.onComplete.add(() => {
+      // let michael_tex = PIXI.TextureCache('../assets/michael.jpg');
+
+      console.log("LOADED", michael_tex);
+
+      for(var i = 0; i < number_of_particles; ++i) {
+        var rx = Math.random();
+        var ry = Math.random();
+        var x = rx * this.app.renderer.width;
+        var y = ry * this.app.renderer.height;
+
+        var c_x = rx * michael_tex.width;
+        var c_y = ry * michael_tex.height;
+        var c_w = michael_tex.width - c_x;
+        var c_h = michael_tex.height - c_y;
+
+        if(c_w <= 0 || c_h <= 0) {
+          continue;
+        }
+
+        c_w = c_w > 2*scale ? 2*scale : c_w;
+        c_h = c_h > 2*scale ? 2*scale : c_h;
+
+        console.log("RECT ",c_x, c_y, c_w, c_h);
+
+        let frame = new PIXI.Rectangle(c_x, c_y, c_w , c_h);
+        let src_tex = new PIXI.Texture(michael_tex, frame);
+        
+        var sprite = new PIXI.Sprite(src_tex);
+        sprite.x = x;
+        sprite.y = y;
+
+        // var rgb = hslToRgb(x % 360, 0.44, 0.56);
+        // sprite.tint = rgb[0] << 16 | rgb[1] << 8 | rgb[0];
+        // sprite.tint = Math.random() * 0xFFFFFF;
+        sprite.mask = mask_tex;
+
+        particlesContainer.addChild(sprite);
+
+        particlesContainer.mask = mask_tex;
+
+        let particle = new Particle(x, y);
+        particle.saveTo = sprite.position;
+        particle.sprite = sprite;
+        // particle.scale = scale;
+
+        _particles.addParticle(particle);
+      }
+
+      this.app.ticker.add((delta) => {
+        _particles.update(delta/50);
+      });
+    });
   }
 
   @HostListener('window:resize')

@@ -127,25 +127,25 @@ export class Boid implements Behavior {
 
     attractor(p: Particle) {
         var dist = p.pos.dist(this.tendToPos);
-        // var max_dist = window.innerWidth > window.innerHeight ? window.innerWidth : window.innerHeight;
+        var max_dist = window.innerWidth > window.innerHeight ? window.innerWidth : window.innerHeight;
         var max_dist = 400;
         if(dist > 0 && dist < max_dist) {
             var desired = this.tendToPos.sub(p.pos);
             desired.mutNormalize();
             var idist = 1/dist;
-            var inv_dist = -Math.cos((Math.PI * 2)/(idist)/max_dist) / 2;
-            if(inv_dist < 1) {
-                inv_dist += (idist * 50000);
+            var inv_dist = -Math.cos((Math.PI * 2)/(idist)/(max_dist)) / 5;
+            var a = 0;
+            if(inv_dist < 2) {
+                a = 1 + idist;
             }
             var dist_factor = (inv_dist * this.max_speed);
             desired.mutScalarMult(this.max_speed * dist_factor);
             // var dist_factor = (inv_dist * this.max_force);
-            var steer = desired.sub(p.velocity);
+            var steer = desired.sub(p.velocity).scalarMult(a * 6);
             this.constrain_mag(steer, this.max_force);
 
             return steer;
         }
-
         return new Vector2(0, 0);
     }
 
@@ -153,7 +153,7 @@ export class Boid implements Behavior {
         var m1 = 1.5;
         var m2 = 1;
         var m3 = 0.6;
-        var m4 = -1;
+        var m4 = 3;
         for(var i = 0; i < this.particle_refs.length; ++i) {
             var v = new Vector2(0, 0);
             v.mutAdd(this.seperate(this.particle_refs[i], i).scalarMult(m1));

@@ -24,7 +24,8 @@ export class Particle {
         this.x = x;
         this.y = y;
 
-        this.velocity = new Vector2(Math.floor(Math.random() * 12) - 6, Math.floor(Math.random() * 12) - 6);
+        // this.velocity = new Vector2(Math.floor(Math.random() * 12) - 6, Math.floor(Math.random() * 12) - 6);
+        this.velocity = new Vector2(0, 0);
         this.pos = new Vector2(this.x, this.y);
     }
 
@@ -72,9 +73,9 @@ export class Particle {
         }
         this.saveTo.x = this.x;
         this.saveTo.y = this.y;
-        this.sprite.pivot.x = this.x + this.cx;
-        this.sprite.pivot.y = this.y + this.cy;
+        // this.sprite.pivot.x = this.x + this.cx;
+        // this.sprite.pivot.y = this.y + this.cy;
         // this.sprite.rotation = -Math.PI / 2;
-        this.sprite.rotation = this.velocity.heading() + Math.PI / 2;
+        // this.sprite.rotation = this.velocity.heading() + Math.PI / 2;
     }
 }
