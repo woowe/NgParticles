@@ -10,6 +10,9 @@ export class MouseRepelBehavior implements Behavior {
     inital_pos: {x: number, y: number}[] = [];
     mouse_pos: {x: number, y: number};
 
+    p_repel_force: Vector2 = new Vector2(0, 0);
+    p_attract_force: Vector2 = new Vector2(0, 0);
+
     constructor(mouse_pos: {x: number, y: number}) {
       this.mouse_pos = mouse_pos;
     }
@@ -41,11 +44,14 @@ export class MouseRepelBehavior implements Behavior {
           var tx = (this.mouse_pos.x - ipos.x) * 1/md * 1/md * 1/md * 1/md/*(Math.cos(a) * d)*/;
           var ty = (this.mouse_pos.y - ipos.y) * 1/md * 1/md * 1/md * 1/md/*(Math.sin(a) * d)*/;
 
-          let repel_force = new Vector2(tx, ty).scalarMult(-70000);
+          let repel_force = new Vector2(tx, ty).scalarMult(-90000);
 
           repel_force.limit(5);
 
+          // this.particle_refs[i].velocity.mutSub(this.p_repel_force);
           this.particle_refs[i].velocity.mutAdd(repel_force);
+
+          this.p_repel_force = repel_force;
 
           var nx = this.particle_refs[i].velocity.xMag + this.particle_refs[i].x;
           var ny = this.particle_refs[i].velocity.yMag + this.particle_refs[i].y;
@@ -59,9 +65,16 @@ export class MouseRepelBehavior implements Behavior {
 
           let attract_force = new Vector2(itx, ity).scalarMult(-(id/150));
 
-          repel_force.limit(7);
+          let inv_attract_force = attract_force.scalarMult(-(1/id * 1/id));
 
+          attract_force.limit(17);
+          // inv_attract_force.limit(17);
+
+          // this.particle_refs[i].velocity.mutSub(this.p_attract_force);
           this.particle_refs[i].velocity.mutAdd(attract_force);
+          this.particle_refs[i].velocity.mutAdd(inv_attract_force);
+
+          this.p_attract_force = attract_force;
 
           // if(md > 200) {
           //   this.particle_refs[i].x = ipos.x;

@@ -74,7 +74,7 @@ export class AppComponent {
     var boid = new Boid(tendTo);
     var mouse_repel = new MouseRepelBehavior(mouse_pos);
     // _particles.addBehavior(boid);
-    _particles.addBehavior(borderWrap);
+    // _particles.addBehavior(borderWrap);
     _particles.addBehavior(mouse_repel);
     // _particles.addBehavior(edgeBehavior);
 
@@ -119,21 +119,25 @@ export class AppComponent {
     let vid_tex;
 
     let loader = new PIXI.loaders.Loader();
-    PIXI.loaders.Resource.setExtensionLoadType('mp4', PIXI.loaders.Resource.LOAD_TYPE.VIDEO);
-    loader.add('five', '../assets/5.mp4');
+    // PIXI.loaders.Resource.setExtensionLoadType('mp4', PIXI.loaders.Resource.LOAD_TYPE.VIDEO);
+    // loader.add('five', '../assets/5.mp4');
     loader.add('michael', '../assets/michael.jpg');
-    loader.add('zack', '../assets/zack.jpg');
-    loader.add('mask', '../assets/mask.png');
+    loader.add('scapulas', '../assets/scapulas-test2.jpg');
+    // loader.add('zack', '../assets/zack.jpg');
+    // loader.add('mask', '../assets/mask.png');
 
     loader.load((loader, resources) => {
-      img_tex = new PIXI.Texture.fromVideo(resources.five.data);
-      img_tex = new PIXI.Texture.from(resources.michael.texture);
-      // img_tex = new PIXI.Texture.from(resources.zack.texture);
-      mask_tex = new PIXI.Texture.from(resources.mask.texture);
+      img_tex = new PIXI.Texture.from(resources.scapulas.texture);
 
       let img_sprite = new PIXI.Sprite(img_tex);
-      img_sprite.x = this.app.renderer.width / 2 - img_tex.width / 2;
-      img_sprite.y = this.app.renderer.height / 2 - img_tex.height / 2;
+      img_sprite.width = Math.min(this.app.renderer.width, img_tex.width);
+      img_sprite.height = Math.min(this.app.renderer.height, img_tex.height);
+      img_sprite.x = this.app.renderer.width / 2 - img_sprite.width / 2;
+      img_sprite.y = this.app.renderer.height / 2 - img_sprite.height / 2;
+
+      img_tex = this.app.renderer.generateTexture(img_sprite, PIXI.settings.SCALE_MODE, 16/9);
+
+      console.log(img_tex);
 
       // let vid_sprite = new PIXI.Sprite(vid_tex);
       // vid_sprite.x = this.app.renderer.width / 2 - vid_tex.width / 2;
